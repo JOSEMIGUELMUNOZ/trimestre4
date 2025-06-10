@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dragon Ball Z - Personajes</title>
+  <style>
+    :root {
+      --color-primario: #ff9100; /* Fondo naranja */
+      --color-secundario: #f57c00; /* Tarjetas */
+      --color-terciario: #fff176; /* Amarillo brillante */
+      --color-cuarto: #ffa000;
+      --color-quinto: #bf360c; /* Naranja oscuro */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-primario);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+    }
+
+    header {
+      background-color: var(--color-cuarto);
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: #fff;
+    }
+
+    .search {
+      background-color: white;
+      color: #333;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      width: 250px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search:focus {
+      outline: none;
+      box-shadow: 0 0 10px var(--color-terciario);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 30px 20px;
+      max-width: 1300px;
+      margin: auto;
+    }
+
+    .personaje {
+      background-color: var(--color-secundario);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .personaje:hover {
+      transform: translateY(-8px);
+    }
+
+    .personaje img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      object-position: top center; /* Mantiene la cabeza visible */
+      background-color: black;
+    }
+
+    .personaje-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .personaje-info h3 {
+      font-size: 1.3rem;
+      color: var(--color-terciario);
+    }
+
+    .personaje-info p {
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .descripcion {
+      background-color: var(--color-quinto);
+      color: #fff;
+      padding: 1rem;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: translateY(100%);
+      transition: transform 0.4s ease-in-out;
+      max-height: 100%;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .personaje:hover .descripcion {
+      transform: translateY(0);
+    }
+
+    .descripcion h4 {
+      margin-top: 0;
+      color: var(--color-terciario);
+    }
+
+    @media screen and (max-width: 600px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .search {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Dragon Ball Z</h1>
+  <form id="form">
+    <input type="text" id="search" class="search" placeholder="Buscar personaje..." />
+  </form>
+</header>
+
+<main id="main"></main>
+
+<script>
+    const API_URL = 'https://dragonball-api.com/api/characters';
+  
+    const main = document.getElementById('main');
+    const form = document.getElementById('form');
+    const search = document.getElementById('search');
+  
+    // Obtener todos los personajes al cargar
+    getCharacters(API_URL);
+  
+    async function getCharacters(url) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+        const data = await res.json();
+        const characters = data.items || data;
+        showCharacters(characters);
+      } catch (error) {
+        showError(error.message);
+      }
+    }
+  
+    function showCharacters(characters) {
+      main.innerHTML = '';
+  
+      if (!characters || characters.length === 0) {
+        showError("No se encontraron personajes.");
+        return;
+      }
+  
+      characters.forEach((char) => {
+        const { id, name, image, ki, maxKi, description, race } = char;
+        const charElement = document.createElement('div');
+        charElement.classList.add('personaje');
+        charElement.innerHTML = `
+          <img src="${image}" alt="${name}">
+          <div class="personaje-info">
+            <h3>${name}</h3>
+            <p>Raza: ${race || 'Desconocida'}</p>
+          </div>
+          <div class="descripcion">
+            <h4>Descripción</h4>
+            <p>${description || 'Sin descripción disponible.'}</p>
+            <p><strong>Ki:</strong> ${ki}</p>
+            <p><strong>Max Ki:</strong> ${maxKi}</p>
+          </div>
+        `;
+        main.appendChild(charElement);
+      });
+    }
+  
+    function showError(message) {
+      main.innerHTML = `
+        <div style="text-align: center; padding: 30px; font-size: 1.2rem; color: white;">
+          ⚠️ ${message}
+        </div>
+      `;
+    }
+  
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const searchTerm = search.value.trim();
+  
+      if (!searchTerm) {
+        showError("Por favor, escribe un nombre para buscar.");
+        return;
+      }
+  
+      try {
+        const res = await fetch(`${API_URL}?name=${searchTerm}`);
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+        const data = await res.json();
+        const characters = data.items || [];
+        showCharacters(characters);
+      } catch (error) {
+        showError(error.message);
+      }
+  
+      search.value = '';
+    });
+  </script>
+  
+
+</body>
+</html>

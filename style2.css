@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap');
+
+body {
+    font-family: 'Cinzel Decorative', cursive;
+    background-image: url('Hogwarts.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 2s ease-in;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+    color: #FFD700;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 2.8em;
+    font-weight: 700;
+    text-shadow: 3px 3px 5px #000000;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #FFD700, 0 0 20px #FFA500; }
+    to { text-shadow: 0 0 20px #FFD700, 0 0 30px #FFA500; }
+}
+
+.navbar {
+    background-color: rgba(75, 0, 130, 0.95);
+    padding: 15px 0;
+    border-bottom: 3px solid #FFD700;
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #ffffff !important;
+    font-size: 1.2em;
+    font-weight: 400;
+    padding: 12px 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-brand:hover, .navbar-nav .nav-link:hover {
+    background-color: #FFD700;
+    color: #4B0082 !important;
+    border-radius: 8px;
+    transform: scale(1.05);
+}
+
+.navbar-toggler {
+    border: 2px solid #FFD700;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 215, 0, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    box-shadow: 0 0 30px #FFD700;
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s ease;
+}
+
+.container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 40px #FFA500;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    color: #000000;
+    background-color: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px #FFD700;
+}
+
+.table thead {
+    background-color: #4B0082;
+    color: #ffffff;
+}
+
+.table th {
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.table td {
+    padding: 12px;
+    font-size: 1em;
+    border-bottom: 1px solid #cccccc;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+.table tbody tr:hover {
+    background-color: #FFD700;
+    color: #4B0082;
+    transform: scale(1.01);
+}
+
+p {
+    text-align: center;
+    font-size: 1.3em;
+    color: #FFD700;
+    text-shadow: 1px 1px 2px #000000;
+    margin: 20px 0;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-hp {
+    background-color: #FFD700;
+    color: #4B0082;
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px #FFD700;
+}
+
+.btn-hp:hover {
+    background-color: #4B0082;
+    color: #FFD700;
+    border-color: #FFD700;
+    box-shadow: 0 0 20px #FFA500;
+    transform: scale(1.05);
+}
+
+footer {
+    background-color: #111;
+    color: #FFD700;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+    font-size: 1em;
+    border-top: 3px solid #FFD700;
+}
+
+footer p {
+    margin: 0;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 25px;
+        margin: 20px auto;
+    }
+    h1 {
+        font-size: 2em;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .table th, .table td {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+    .btn-hp {
+        font-size: 1em;
+        padding: 12px 25px;
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+    footer {
+        font-size: 0.9em;
+        padding: 15px;
+    }
+    p {
+        font-size: 1.1em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    .table th, .table td {
+        font-size: 0.8em;
+        padding: 8px;
+    }
+    .btn-hp {
+        font-size: 0.9em;
+        padding: 10px 20px;
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+        font-size: 0.9em;
+        padding: 8px 12px;
+    }
+    footer {
+        font-size: 0.8em;
+        padding: 12px;
+    }
+    p {
+        font-size: 1em;
+    }
+}
+
+:focus {
+    outline: 3px solid #FFA500;
+    outline-offset: 2px;
+}
+
+* {
+    transition: all 0.3s ease;
+}
+
+.table th:hover, .table td:hover {
+    background-color: rgba(255, 215, 0, 0.2);
+}
+
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+a {
+    color: #FFD700;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #FFA500;
+}
