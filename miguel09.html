@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HP & RyM </title>
+  <style>
+    :root {
+      --color-primario: #1c0b2b;  
+      --color-secundario: #0c1f33; 
+      --color-acento: #ffcc00;    
+      --color-hover: #00ffd5;     
+      --color-texto: #f0e9f9;
+      --color-carta: #25143c;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+      color: var(--color-texto);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+    }
+
+    header {
+      background-color: var(--color-carta);
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid var(--color-acento);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .search {
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: 2px solid var(--color-hover);
+      background-color: transparent;
+      color: var(--color-texto);
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      width: 60%;
+      max-width: 500px;
+    }
+
+    .search::placeholder {
+      color: #aaa;
+    }
+
+    .search:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      padding: 30px;
+    }
+
+    .tarjeta {
+      background-color: var(--color-carta);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tarjeta:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px var(--color-hover);
+    }
+
+    .tarjeta img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-bottom: 3px solid var(--color-acento);
+      background-color: #000;
+    }
+
+    .tarjeta-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .tarjeta-info h1 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--color-hover);
+    }
+
+    .tarjeta-info h3 {
+      margin: 5px 0;
+      font-size: 1.3rem;
+      color: var(--color-acento);
+    }
+
+    .tarjeta-info span {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    .descripcion {
+      padding: 15px;
+      font-size: 0.9rem;
+      background-color: rgba(255, 255, 255, 0.03);
+      color: #ddd;
+      text-align: center;
+    }
+
+    .descripcion strong {
+      color: var(--color-hover);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <form id="form">
+      <input type="text" id="search" class="search" placeholder="Buscar personaje mágico o interdimensional...">
+    </form>
+  </header>
+
+  <main id="main"></main>
+
+  <script>
+    const API_HP = 'https://hp-api.onrender.com/api/characters';
+    const API_RM = 'https://rickandmortyapi.com/api/character';
+    const main = document.getElementById('main');
+    const form = document.getElementById('form');
+    const search = document.getElementById('search');
+  
+    getCharacters();
+  
+    async function getCharacters(searchTerm = '') {
+      main.innerHTML = '';
+  
+      try {
+        const resHP = await fetch(API_HP);
+        if (!resHP.ok) throw new Error('HP API error');
+        const dataHP = await resHP.json();
+        const filteredHP = searchTerm
+          ? dataHP.filter(c => c.name.toLowerCase().includes(searchTerm))
+          : dataHP;
+        renderHP(filteredHP);
+      } catch (e) {
+        console.error('Error cargando personajes de HP:', e.message);
+      }
+  
+      try {
+        const resRM = await fetch(`${API_RM}?name=${searchTerm}`);
+        if (!resRM.ok) throw new Error(`No se encontraron personajes RM para "${searchTerm}"`);
+        const dataRM = await resRM.json();
+        renderRM(dataRM.results || []);
+      } catch (e) {
+        console.warn('Error cargando personajes de Rick and Morty:', e.message);
+      }
+    }
+  
+    function renderHP(characters) {
+      characters.forEach(({ name, image, house, species }) => {
+        const card = document.createElement('div');
+        card.classList.add('tarjeta');
+        card.innerHTML = `
+          <img src="${image}" alt="${name}">
+          <div class="tarjeta-info">
+            <h1>HOGWARTS</h1>
+            <h3>${name}</h3>
+            <span>${house || 'Sin casa'}</span>
+          </div>
+          <div class="descripcion">
+            <p><strong>Casa:</strong> ${house || 'Desconocida'}<br>
+            <strong>Especie:</strong> ${species || 'Desconocida'}</p>
+          </div>
+        `;
+        main.appendChild(card);
+      });
+    }
+  
+    function renderRM(characters) {
+      characters.forEach(({ id, name, image, species, status, origin }) => {
+        const card = document.createElement('div');
+        card.classList.add('tarjeta');
+        card.innerHTML = `
+          <img src="${image}" alt="${name}">
+          <div class="tarjeta-info">
+            <h1>DIM-${id}</h1>
+            <h3>${name}</h3>
+            <span>${species}</span>
+          </div>
+          <div class="descripcion">
+            <p><strong>Estado:</strong> ${status} <br>
+            <strong>Origen:</strong> ${origin?.name || 'Desconocido'}</p>
+          </div>
+        `;
+        main.appendChild(card);
+      });
+    }
+  
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const term = search.value.trim().toLowerCase();
+      getCharacters(term);
+      search.value = '';
+    });
+  </script>
+  
+</body>
+</html>
